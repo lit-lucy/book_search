@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Error
+{% endblock %}
+
+{% block body %}
+	{{message}}
+	<a href="{{ url_for('book', book_isbn=book_isbn) }}">{{ link_message }}</a>
+
+{% endblock %}

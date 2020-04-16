@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+My account page
+{% endblock %}
+
+{% block body %}
+
+<h1>Hello, {{ user.username }}</h1>
+	<form action="{{ url_for('search') }}" method="post">
+		<label>Search for a book</label>
+		<div class="form-group">
+		  	<input class="form-control" type="text" name="search" placeholder="Enter ISBN number, book title or author of the book"> 
+		</div>
+		<button type="submit" class="btn btn-primary">Find</button>
+	</form>
+
+
+<a href="{{ url_for('index') }}">Log out</a>
+
+{% endblock %}

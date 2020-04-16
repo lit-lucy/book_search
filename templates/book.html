@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Book page
+
+{% endblock %}
+{% block script %}
+	document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('button').onclick = success;
+              });
+
+            function success() {
+                alert(`Your review is subbmitted!`);
+            }
+{% endblock %}
+
+{% block body %}
+	<div class="jumbotron text-center">
+  		<h1>{{ book_data.title }}</h1>
+  		<h2> by {{ book_data.author }}</h2>
+  		<p>Published in {{ book_data.year }}</p>
+  		<p>ISBN number: {{ book_data.isbn }}</p>
+  		<div>
+			<div>
+				Goodreads rating: {{ rating }}
+				{% for i in range(rating_int) %}
+					<span class="fa fa-star"></span>
+				{% endfor %}
+				Based on {{ rating_count }} reviews.
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<h2>Your review:</h2>
+
+		{% if user_review == None %}
+			<p>You haven't submitted review for this book yet</p>
+		{% else %}
+			{% for i in range(user_review.rating) %}
+				<span class="fa fa-star"></span>
+			{% endfor %}
+			<p>"{{ user_review.review }}"</p>
+		{% endif %}
+	</div>
+	<div class="container">
+		<h2>Submit review</h2>
+		<form action="{{ url_for('add_review') }}" method="post">
+			<div class="form-group">
+			    <input type="hidden" name="book_isbn" value="{{ book_data.isbn }}">
+			</div>
+			<div class="form-group">
+			    <label for="review_rating">Submit your rating</label>
+			    <select class="form-control" name="review_rating">
+			      <option value="1">1</option>
+			      <option value="2">2</option>
+			      <option value="3">3</option>
+			      <option value="4">4</option>
+			      <option value="5">5</option>
+			    </select>
+			</div>
+			<div class="form-group">
+			    <label for="review">Write your review here</label>
+			    <textarea class="form-control" name="review" rows="5"></textarea>
+			</div>
+			<button type="submit" class="btn btn-primary mb-2">Make review</button>
+		</form>
+	</div>
+
+	<div class="container">
+		<h2>What others wrote about this book</h2>
+		<div class="row">
+		  	{% for review in other_reviews %}
+		    <div class="col-sm-4">
+
+		      	{% for i in range(review.rating) %}
+					<span class="fa fa-star"></span>
+				{% endfor %}
+		      	<p>"{{ review.review }}"</p>
+		    </div>
+		    {% endfor %}
+		</div>
+	</div>
+	<div class="jumbotron text-center">
+		<a href="/">Go back to search page</a>
+	</div>
+
+{% endblock %}

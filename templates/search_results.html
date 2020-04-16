@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Search results
+{% endblock %}
+
+{% block body %}
+	<h1>This is what was found:</h1>
+		<ul class="list-group">
+			{% for row in result %}
+			<li class="list-group-item">
+				<a href="{{ url_for('book', book_isbn=row.isbn) }}">The book "{{ row.title }}" written by {{ row.author }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+	<a href="/">Search again</a>
+
+{% endblock %}
