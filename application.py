@@ -1,7 +1,7 @@
 import os
 import requests
 
-from flask import Flask, session, render_template, request, redirect, url_for, escape
+from flask import Flask, session, render_template, request, redirect, url_for, escape, jsonify
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -113,5 +113,29 @@ def add_review():
 	db.commit()
 
 	return redirect(url_for("book",book_isbn=books_isbn))
+
+@app.route("/api/<isbn>", methods=["GET"])
+def isbn_api(isbn):
+	#make sure the book exists
+	book = db.execute("SELECT * FROM books WHERE ISBN = :isbn", {"isbn":isbn}).fetchone()
+	if book is None:
+		return jsonify({"error": "Invalid ISBN"}), 422
+	#Get data about reviews
+	review_count = db.execute("SELECT * FROM reviews WHERE books_isbn = :isbn", {"isbn":isbn}).rowcount
+	average_score = db.execute("SELECT AVG(rating) FROM reviews WHERE books_isbn = :isbn",{"isbn":isbn}).scalar()
+
+	return jsonify({
+		"title": book.title,
+		"author": book.author,
+		"year": book.year,
+		"isbn": isbn,
+		"review_count": review_count,
+		"average_score": float(average_score)
+		})
+	
+	
+	 
+
+ 
 
 
